@@ -138,7 +138,7 @@ export default function RelatedCarsCarousel({
                     alt={car.name}
                     width={292}
                     height={400}
-                    unoptimized
+                    // unoptimized
                     className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
                   />
                 </div>

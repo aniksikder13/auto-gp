@@ -18,6 +18,7 @@ interface Car {
   price: string;
   feature_image: string;
   body_style?: number;
+  car_type?: string;
   registered: string;
   availability?: string;
 }
@@ -209,9 +210,9 @@ export default function CarsClient({ config }: CarsClientProps) {
         const response = await fetch(apiUrl);
         const data: ApiResponse = await response.json();
 
-        if (data.success) {
-          setCars(data.data.results);
-          setTotalPages(data.data.total_page);
+        if (data?.success) {
+          setCars(data?.data?.results);
+          setTotalPages(data?.data?.total_page);
         } else {
           setError("Failed to fetch cars data");
         }
@@ -538,13 +539,13 @@ export default function CarsClient({ config }: CarsClientProps) {
               >
                 {/* Image */}
                 <div className="relative z-10">
-                  {car.feature_image ? (
+                  {car?.feature_image ? (
                     <Image
                       src={car?.feature_image}
                       alt={car?.name}
                       width={292}
                       height={243}
-                      unoptimized
+                      // unoptimized
                       className="w-full h-[243px] object-cover"
                       priority
                     />
@@ -558,18 +559,18 @@ export default function CarsClient({ config }: CarsClientProps) {
                 {/* Card Content */}
                 <div className="p-4">
                   <h3 className="text-base font-semibold leading-tight">
-                    {car.name}
+                    {car?.name}
                   </h3>
                   <p className="text-sm text-gray-400 mt-1">{car?.model}</p>
 
                   <div className="flex justify-between text-xs text-gray-400 border-b border-gray-700 pb-2 mt-2">
                     <span>{car?.fuel_type}</span>
-                    <span>{car?.registered}</span>
+                    <span>{car?.car_type}</span>
                     <span>{car?.mileage}</span>
                   </div>
 
                   <p className="font-bold text-base mt-3">
-                     {formatBDT(Number(car?.price))}
+                    {formatBDT(Number(car?.price))}
                   </p>
 
                   <div className="w-full mt-3 bg-white text-black text-center py-2 rounded-md hover:bg-gray-200 transition text-sm font-medium">

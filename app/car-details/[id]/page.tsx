@@ -158,7 +158,9 @@ export default function CarDetail() {
   // Prepare images array
   const images = car.inventory_images;
 
-  const formattedPrice = formatBDT(car?.price ?? 0);
+  const formattedPrice = car?.price
+    ? formatBDT(car?.price)
+    : "Contact for price";
 
   return (
     <div className="bg-black text-white min-h-screen container-responsive  mx-auto">
@@ -184,7 +186,7 @@ export default function CarDetail() {
                 alt={car.name}
                 fill
                 className="object-cover"
-                unoptimized
+                // unoptimized
                 onClick={() => openImagePopup(0)}
                 priority
               />
@@ -206,7 +208,7 @@ export default function CarDetail() {
                     src={img?.image ?? "/images/car-placeholder.jpg"}
                     alt={img.caption ?? car.name}
                     fill
-                    unoptimized
+                    // unoptimized
                     className="object-cover"
                   />
                 </div>
