@@ -150,7 +150,7 @@ export default function CarsClient({ config }: CarsClientProps) {
 
       // Handle availability
       if (selectedAvailability) {
-        params.append("availability", selectedAvailability);
+        params.append("registered", selectedAvailability);
       }
 
       return `${baseUrl}?${params.toString()}`;
@@ -180,7 +180,7 @@ export default function CarsClient({ config }: CarsClientProps) {
       Object.entries(config.baseApiParams).forEach(([key, value]) => {
         params.append(key, value);
       });
-
+      console.log(`${baseUrl}?${params.toString()}`);
       const response = await fetch(`${baseUrl}?${params.toString()}`);
       const data: ApiResponse = await response.json();
 
@@ -251,9 +251,19 @@ export default function CarsClient({ config }: CarsClientProps) {
   }, [fetchFilterOptions]);
 
   // Fetch cars whenever filters or pagination changes
-  useEffect(() => {
-    fetchCars(currentPage);
-  }, [currentPage, fetchCars]);
+useEffect(() => {
+  fetchCars(currentPage);
+}, [
+  currentPage,
+  selectedBrand,
+  selectedModel,
+  selectedYear,
+  selectedEngineCapacity,
+  selectedBodyStyle,
+  selectedPriceRange,
+  selectedAvailability,
+  fetchCars,
+]);
 
   // Reset filters when config changes
   useEffect(() => {
@@ -283,8 +293,9 @@ export default function CarsClient({ config }: CarsClientProps) {
   const applyFilters = () => {
     setCurrentPage(1);
     setShowMobileFilters(false);
-    fetchCars(1);
+    // fetchCars(1);
   };
+
 
   // Pagination
   const paginate = (pageNumber: number) => {
@@ -428,7 +439,7 @@ export default function CarsClient({ config }: CarsClientProps) {
               >
                 <option value="">All Available</option>
                 {availabilities.map((availability) => (
-                  <option key={availability} value={availability.toLowerCase()}>
+                  <option key={availability} value={availability}>
                     {availability}
                   </option>
                 ))}
