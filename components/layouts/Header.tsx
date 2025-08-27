@@ -15,7 +15,7 @@ export default function Header() {
       <div className="relative mx-auto flex items-center justify-between max-w-7xl">
         {/* Left Section: Search */}
         <CarinventoryOverlay />
-
+        {/* /images/logo.png */}
         {/* Center: Logo (absolutely centered) */}
         <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
           {/* Desktop Logo: visible on md and up */}
@@ -25,7 +25,7 @@ export default function Header() {
               alt="BEG AUTOS"
               width={233}
               height={20}
-              className=" hidden md:block"
+              className="hidden md:block"
               priority
             />
           </Link>

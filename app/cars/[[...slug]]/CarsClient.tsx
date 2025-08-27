@@ -530,7 +530,7 @@ export default function CarsClient({ config }: CarsClientProps) {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-6">
-            {cars.map((car) => (
+            {cars?.map((car) => (
               <Link
                 key={car.id}
                 href={`/car-details/${car.id}`}
@@ -540,10 +540,11 @@ export default function CarsClient({ config }: CarsClientProps) {
                 <div className="relative z-10">
                   {car.feature_image ? (
                     <Image
-                      src={car.feature_image}
-                      alt={car.name}
+                      src={car?.feature_image}
+                      alt={car?.name}
                       width={292}
                       height={243}
+                      unoptimized
                       className="w-full h-[243px] object-cover"
                       priority
                     />
@@ -559,16 +560,16 @@ export default function CarsClient({ config }: CarsClientProps) {
                   <h3 className="text-base font-semibold leading-tight">
                     {car.name}
                   </h3>
-                  <p className="text-sm text-gray-400 mt-1">{car.model}</p>
+                  <p className="text-sm text-gray-400 mt-1">{car?.model}</p>
 
                   <div className="flex justify-between text-xs text-gray-400 border-b border-gray-700 pb-2 mt-2">
-                    <span>{car.fuel_type}</span>
-                    <span>{car.registered}</span>
-                    <span>{car.mileage}</span>
+                    <span>{car?.fuel_type}</span>
+                    <span>{car?.registered}</span>
+                    <span>{car?.mileage}</span>
                   </div>
 
                   <p className="font-bold text-base mt-3">
-                    BDT {formatBDT(Number(car.price))}
+                     {formatBDT(Number(car?.price))}
                   </p>
 
                   <div className="w-full mt-3 bg-white text-black text-center py-2 rounded-md hover:bg-gray-200 transition text-sm font-medium">

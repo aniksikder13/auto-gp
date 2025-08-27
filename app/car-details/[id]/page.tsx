@@ -158,7 +158,7 @@ export default function CarDetail() {
   // Prepare images array
   const images = car.inventory_images;
 
-  const formattedPrice = formatBDT(car.price);
+  const formattedPrice = formatBDT(car?.price ?? 0);
 
   return (
     <div className="bg-black text-white min-h-screen container-responsive  mx-auto">
@@ -180,10 +180,11 @@ export default function CarDetail() {
           <div className="relative overflow-hidden cursor-pointer aspect-[4/3]">
             {images[0] && (
               <Image
-                src={images[0].image} // This will now be first inventory image
+                src={images[0]?.image ?? "/images/car-placeholder.jpg"} // This will now be first inventory image
                 alt={car.name}
                 fill
                 className="object-cover"
+                unoptimized
                 onClick={() => openImagePopup(0)}
                 priority
               />
@@ -202,9 +203,10 @@ export default function CarDetail() {
                   onClick={() => openImagePopup(index + 1)} // Adjust index
                 >
                   <Image
-                    src={img.image}
-                    alt={img.caption || car.name}
+                    src={img?.image ?? "/images/car-placeholder.jpg"}
+                    alt={img.caption ?? car.name}
                     fill
+                    unoptimized
                     className="object-cover"
                   />
                 </div>
@@ -347,14 +349,14 @@ export default function CarDetail() {
                   <div className="aspect-[4/3]">
                     <div className="relative w-full h-full rounded-lg overflow-hidden cursor-pointer">
                       <Image
-                        src={images[20].image}
-                        alt={images[20].caption || car.name}
+                        src={images[20]?.image}
+                        alt={images[20]?.caption || car?.name}
                         fill
                         className="object-cover hover:scale-105 transition-transform duration-300"
                       />
                       <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-2">
                         <p className="text-sm text-white">
-                          {images[20].caption}
+                          {images[20]?.caption}
                         </p>
                       </div>
                     </div>
@@ -368,14 +370,14 @@ export default function CarDetail() {
                       <div className="col-span-1 aspect-[1/2.05]">
                         <div className="relative w-full h-full rounded-lg overflow-hidden cursor-pointer">
                           <Image
-                            src={images[21].image}
-                            alt={images[21].caption || car.name}
+                            src={images[21]?.image}
+                            alt={images[21]?.caption || car?.name}
                             fill
                             className="object-cover hover:scale-105 transition-transform duration-300"
                           />
                           <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-2">
                             <p className="text-sm text-white">
-                              {images[21].caption}
+                              {images[21]?.caption}
                             </p>
                           </div>
                         </div>
@@ -389,14 +391,14 @@ export default function CarDetail() {
                       >
                         <div className="relative w-full h-full rounded-lg overflow-hidden cursor-pointer">
                           <Image
-                            src={images[22].image}
-                            alt={images[22].caption || car.name}
+                            src={images[22]?.image}
+                            alt={images[22]?.caption || car?.name}
                             fill
                             className="object-cover hover:scale-105 transition-transform duration-300"
                           />
                           <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-2">
                             <p className="text-sm text-white">
-                              {images[22].caption}
+                              {images[22]?.caption}
                             </p>
                           </div>
                         </div>
@@ -416,14 +418,14 @@ export default function CarDetail() {
                       >
                         <div className="relative w-full h-full rounded-lg overflow-hidden cursor-pointer">
                           <Image
-                            src={images[23].image}
-                            alt={images[23].caption || car.name}
+                            src={images[23]?.image}
+                            alt={images[23]?.caption || car?.name}
                             fill
                             className="object-cover hover:scale-105 transition-transform duration-300"
                           />
                           <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-2">
                             <p className="text-sm text-white">
-                              {images[23].caption}
+                              {images[23]?.caption}
                             </p>
                           </div>
                         </div>
@@ -433,14 +435,14 @@ export default function CarDetail() {
                       <div className="col-span-1 aspect-[1/2.05]">
                         <div className="relative w-full h-full rounded-lg overflow-hidden cursor-pointer">
                           <Image
-                            src={images[24].image}
-                            alt={images[24].caption || car.name}
+                            src={images[24]?.image}
+                            alt={images[24]?.caption || car?.name}
                             fill
                             className="object-cover hover:scale-105 transition-transform duration-300"
                           />
                           <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-2">
                             <p className="text-sm text-white">
-                              {images[24].caption}
+                              {images[24]?.caption}
                             </p>
                           </div>
                         </div>
@@ -450,7 +452,7 @@ export default function CarDetail() {
                 )}
 
                 {/* Show message if no images available */}
-                {images.length === 0 && (
+                {images?.length === 0 && (
                   <div className="text-center py-8">
                     <p className="text-gray-400">
                       No images available for this vehicle.
@@ -461,13 +463,13 @@ export default function CarDetail() {
             </div>
 
             {/* Video section */}
-            {car.youtube && (
+            {car?.youtube && (
               <div className="my-8">
                 <div className="relative h-96 rounded-lg overflow-hidden">
                   {showVideo ? (
                     <iframe
                       className="w-full h-full"
-                      src={getEmbedUrl(car.youtube)}
+                      src={getEmbedUrl(car?.youtube)}
                       title="Car Video"
                       frameBorder="1"
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -550,7 +552,7 @@ export default function CarDetail() {
                 className="p-2 rounded-lg bg-[rgba(255,221,237,0.12)] hover:bg-gray-800 transition cursor-pointer w-full"
               >
                 <div className="w-full text-center rounded-[5px] font-bold py-3 px-4">
-                  Contact Us - Books An Appointmen
+                  Books An Appointmen
                 </div>
               </button>
             </div>

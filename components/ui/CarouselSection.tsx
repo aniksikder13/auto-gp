@@ -112,10 +112,11 @@ export default function CarouselSection() {
               <Link href={`/car-details/${car.id}`}>
                 <div className="aspect-[292/400] rounded-lg overflow-hidden mb-3">
                   <Image
-                    src={car.feature_image || "/images/car-placeholder.jpg"}
+                    src={car.feature_image ?? "/images/car-placeholder.jpg"}
                     alt={car.name}
                     width={292}
                     height={400}
+                    unoptimized
                     className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
                   />
                 </div>
