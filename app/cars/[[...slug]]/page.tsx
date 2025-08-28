@@ -22,7 +22,7 @@ const CAR_TYPE_CONFIGS = {
     description:
       "Glance through the widest collection of reconditioned Japanese models & pre-owned European units and choose according to your budget & quality preferences.",
     bannerImage: "/images/banner.png",
-    baseApiParams: { car_type: "BRAND NEW" },
+    baseApiParams: { car_type: "BRAND NEW, Reconditioned" },
     seoTitle: "Brand New Cars - Latest Models",
     seoDescription:
       "Discover our collection of brand new vehicles with full warranty",
