@@ -109,7 +109,7 @@ export default function CarsClient({ config }: CarsClientProps) {
   const [availabilities] = useState<string[]>([
     "Available",
     "Sold",
-    "Reserved",
+    "Booked",
   ]);
 
   // Pagination
