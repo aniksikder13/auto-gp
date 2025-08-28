@@ -579,13 +579,19 @@ useEffect(() => {
                   <p className="text-sm text-gray-400 mt-1">{car?.model}</p>
 
                   <div className="flex justify-between text-xs text-gray-400 border-b border-gray-700 pb-2 mt-2">
-                    <span className="capitalize">{car?.fuel_type?.toLocaleLowerCase()}</span>
-                    <span className="capitalize">{car?.car_type?.toLocaleLowerCase()}</span>
+                    <span className="capitalize">
+                      {car?.fuel_type?.toLocaleLowerCase()}
+                    </span>
+                    <span className="capitalize">
+                      {car?.car_type?.toLocaleLowerCase()}
+                    </span>
                     <span>{car?.mileage}</span>
                   </div>
 
                   <p className="font-bold text-base mt-3">
-                    {formatBDT(Number(car?.price))}
+                    {Number(car?.price) === 0
+                      ? "Contact for price"
+                      : formatBDT(Number(car?.price))}
                   </p>
 
                   <div className="w-full mt-3 bg-white text-black text-center py-2 rounded-md hover:bg-gray-200 transition text-sm font-medium">
