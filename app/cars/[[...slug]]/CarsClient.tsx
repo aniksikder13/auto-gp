@@ -49,6 +49,18 @@ interface Config {
   seoDescription: string;
 }
 
+interface BrandType{
+  id: number;
+  name: string;
+  image: string;
+}
+
+interface ModelType {
+  id: number;
+  brand: string;
+  model: string;
+}
+
 interface CarsClientProps {
   config: Config;
 }
@@ -87,8 +99,8 @@ export default function CarsClient({ config }: CarsClientProps) {
   const [selectedAvailability, setSelectedAvailability] = useState<string>("");
 
   // Filter options
-  const [brands, setBrands] = useState<string[]>([]);
-  const [models, setModels] = useState<string[]>([]);
+  const [brands, setBrands] = useState<Array<BrandType>>();
+  const [models, setModels] = useState<Array<ModelType>>();
 
   const [bodyStyles, setBodyStyles] = useState<{ id: number; body: string }[]>(
     []
@@ -169,37 +181,37 @@ export default function CarsClient({ config }: CarsClientProps) {
   );
 
   // Fetch filter options (only once at initial load)
-  const fetchFilterOptions = useCallback(async () => {
-    try {
-      // Build URL with base params for getting filter options
-      const baseUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/inventory/`;
-      const params = new URLSearchParams();
-      params.append("limit", "100");
+  // const fetchFilterOptions = useCallback(async () => {
+  //   try {
+  //     // Build URL with base params for getting filter options
+  //     const baseUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/inventory/`;
+  //     const params = new URLSearchParams();
+  //     params.append("limit", "100");
 
-      // Add base parameters for car type
-      Object.entries(config.baseApiParams).forEach(([key, value]) => {
-        params.append(key, value);
-      });
-      console.log(`${baseUrl}?${params.toString()}`);
-      const response = await fetch(`${baseUrl}?${params.toString()}`);
-      const data: ApiResponse = await response.json();
+  //     // Add base parameters for car type
+  //     Object.entries(config.baseApiParams).forEach(([key, value]) => {
+  //       params.append(key, value);
+  //     });
+   
+  //     const response = await fetch(`${baseUrl}?${params.toString()}`);
+  //     const data: ApiResponse = await response.json();
 
-      if (data.success) {
-        const carsData = data.data.results;
-        const uniqueBrands = Array.from(
-          new Set(carsData.map((car) => car.brand))
-        );
-        const uniqueModels = Array.from(
-          new Set(carsData.map((car) => car.model))
-        );
+  //     if (data.success) {
+  //       const carsData = data.data.results;
+  //       const uniqueBrands = Array.from(
+  //         new Set(carsData.map((car) => car.brand))
+  //       );
+  //       const uniqueModels = Array.from(
+  //         new Set(carsData.map((car) => car.model))
+  //       );
 
-        setBrands(uniqueBrands);
-        setModels(uniqueModels);
-      }
-    } catch (err) {
-      console.error("Error fetching filter options:", err);
-    }
-  }, [config.baseApiParams]);
+  //       setBrands(uniqueBrands);
+  //       setModels(uniqueModels);
+  //     }
+  //   } catch (err) {
+  //     console.error("Error fetching filter options:", err);
+  //   }
+  // }, [config.baseApiParams]);
 
   // Fetch cars with filters
   const fetchCars = useCallback(
@@ -244,11 +256,40 @@ export default function CarsClient({ config }: CarsClientProps) {
     }
   };
 
+useEffect(() => {
+  (async function () {
+    try {
+      const [brandsRes, generationsRes] = await Promise.all([
+        fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/inventory/brands/`),
+        fetch(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/inventory/generations/`
+        ),
+      ]);
+
+      const [brandsJson, generationsJson] = await Promise.all([
+        brandsRes.json(),
+        generationsRes.json(),
+      ]);
+
+      if (brandsJson?.success) {
+        setBrands(brandsJson.data); 
+      }
+
+      if (generationsJson?.success) {
+        setModels(generationsJson?.data);
+      }
+    } catch (error) {
+      console.error("Failed to fetch brands or generations", error);
+    }
+  })();
+}, []);
+
+
   // Load initial filter options and body styles
   useEffect(() => {
-    fetchFilterOptions();
+    fetchCars();
     fetchBodyStyles();
-  }, [fetchFilterOptions]);
+  }, [selectedBrand, selectedModel, selectedAvailability, selectedBodyStyle, selectedPriceRange]);
 
   // Fetch cars whenever filters or pagination changes
 useEffect(() => {
@@ -302,8 +343,6 @@ useEffect(() => {
     setCurrentPage(pageNumber);
   };
 
-  console.log(cars)
-
   return (
     <div className="flex flex-col md:flex-row gap-8 relative min-h-screen ">
       {/* Mobile Filter Button */}
@@ -354,9 +393,9 @@ useEffect(() => {
                 onChange={(e) => setSelectedBrand(e.target.value)}
               >
                 <option value="">All Brands</option>
-                {brands.map((brand) => (
-                  <option key={brand} value={brand}>
-                    {brand}
+                {brands?.map((brand, index) => (
+                  <option key={index} value={brand?.name}>
+                    {brand?.name}
                   </option>
                 ))}
               </select>
@@ -383,9 +422,9 @@ useEffect(() => {
                 onChange={(e) => setSelectedModel(e.target.value)}
               >
                 <option value="">All Model</option>
-                {models.map((model) => (
-                  <option key={model} value={model}>
-                    {model}
+                {models?.map((model, index) => (
+                  <option key={index} value={model?.model}>
+                    {model?.model}
                   </option>
                 ))}
               </select>
