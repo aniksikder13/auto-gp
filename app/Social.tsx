@@ -132,7 +132,9 @@ export default function TestimonialGallerySection() {
                     alt={getImageTitle(0)}
                     width={400} // Change from 414 to 400
                     height={400} // Change from 414 to 400
-                    // unoptimized
+                     // quality={70}
+  placeholder="blur"
+blurDataURL="/images/car-placeholder.jpg"
                     className="object-cover rounded-[4px] w-full h-full"
                   />
                 </div>
@@ -157,7 +159,9 @@ export default function TestimonialGallerySection() {
                       alt={getImageTitle(1)}
                       width={200}
                       height={200}
-                      // unoptimized
+                       // quality={70}
+  placeholder="blur"
+blurDataURL="/images/car-placeholder.jpg"
                       className="object-cover rounded-[4px] w-full h-full"
                     />
                   </div>
@@ -180,7 +184,9 @@ export default function TestimonialGallerySection() {
                       alt={getImageTitle(2)}
                       width={200}
                       height={200}
-                      // unoptimized
+                       // quality={70}
+  placeholder="blur"
+blurDataURL="/images/car-placeholder.jpg"
                       className="object-cover rounded-[4px] w-full h-full"
                     />
                   </div>
@@ -211,7 +217,9 @@ export default function TestimonialGallerySection() {
                       alt={getImageTitle(3)}
                       width={200}
                       height={200}
-                      // unoptimized
+                       // quality={70}
+  placeholder="blur"
+blurDataURL="/images/car-placeholder.jpg"
                       className="object-cover rounded-[4px] w-full h-full"
                     />
                   </div>
@@ -234,7 +242,9 @@ export default function TestimonialGallerySection() {
                       alt={getImageTitle(4)}
                       width={200}
                       height={200}
-                      // unoptimized
+                       // quality={70}
+  placeholder="blur"
+blurDataURL="/images/car-placeholder.jpg"
                       className="object-cover rounded-[4px] w-full h-full"
                     />
                   </div>
@@ -259,7 +269,9 @@ export default function TestimonialGallerySection() {
                     alt={getImageTitle(5)}
                     width={400} // Change from 414 to 400
                     height={400} // Change from 414 to 400
-                    // unoptimized
+                     // quality={70}
+  placeholder="blur"
+blurDataURL="/images/car-placeholder.jpg"
                     className="object-cover rounded-[4px] w-full h-full"
                   />
                 </div>
@@ -285,7 +297,9 @@ export default function TestimonialGallerySection() {
                   <Image
                     src={getImageUrl(6)}
                     alt={getImageTitle(6)}
-                    // unoptimized
+                     // quality={70}
+  placeholder="blur"
+blurDataURL="/images/car-placeholder.jpg"
                     width={400} // Change from 414 to 400
                     height={400} // Change from 414 to 400
                     className="object-cover rounded-[4px] w-full h-full"
@@ -312,7 +326,9 @@ export default function TestimonialGallerySection() {
                       alt={getImageTitle(7)}
                       width={200}
                       height={200}
-                      // unoptimized
+                       // quality={70}
+  placeholder="blur"
+blurDataURL="/images/car-placeholder.jpg"
                       className="object-cover rounded-[4px] w-full h-full"
                     />
                   </div>
@@ -335,7 +351,9 @@ export default function TestimonialGallerySection() {
                       alt={getImageTitle(8)}
                       width={200}
                       height={200}
-                      // unoptimized
+                       // quality={70}
+  placeholder="blur"
+blurDataURL="/images/car-placeholder.jpg"
                       className="object-cover rounded-[4px] w-full h-full"
                     />
                   </div>

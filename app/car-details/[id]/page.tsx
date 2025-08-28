@@ -186,7 +186,9 @@ export default function CarDetail() {
                 alt={car.name}
                 fill
                 className="object-cover"
-                // unoptimized
+                // quality={70}
+                placeholder="blur"
+                blurDataURL="/images/car-placeholder.jpg"
                 onClick={() => openImagePopup(0)}
                 priority
               />
@@ -208,7 +210,9 @@ export default function CarDetail() {
                     src={img?.image ?? "/images/car-placeholder.jpg"}
                     alt={img.caption ?? car.name}
                     fill
-                    // unoptimized
+                    // quality={70}
+                    placeholder="blur"
+                    blurDataURL="/images/car-placeholder.jpg"
                     className="object-cover"
                   />
                 </div>
@@ -554,7 +558,7 @@ export default function CarDetail() {
                 className="p-2 rounded-lg bg-[rgba(255,221,237,0.12)] hover:bg-gray-800 transition cursor-pointer w-full"
               >
                 <div className="w-full text-center rounded-[5px] font-bold py-3 px-4">
-                  Books An Appointmen
+                  Book an Appointment
                 </div>
               </button>
             </div>

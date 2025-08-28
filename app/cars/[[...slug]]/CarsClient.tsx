@@ -302,6 +302,8 @@ useEffect(() => {
     setCurrentPage(pageNumber);
   };
 
+  console.log(cars)
+
   return (
     <div className="flex flex-col md:flex-row gap-8 relative min-h-screen ">
       {/* Mobile Filter Button */}
@@ -556,7 +558,9 @@ useEffect(() => {
                       alt={car?.name}
                       width={292}
                       height={243}
-                      // unoptimized
+                      // quality={70}
+                      placeholder="blur"
+                      blurDataURL="/images/car-placeholder.jpg"
                       className="w-full h-[243px] object-cover"
                       priority
                     />
