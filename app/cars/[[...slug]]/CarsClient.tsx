@@ -573,14 +573,14 @@ useEffect(() => {
 
                 {/* Card Content */}
                 <div className="p-4">
-                  <h3 className="text-base font-semibold leading-tight">
-                    {car?.name}
+                  <h3 className="text-base font-semibold leading-tight capitalize">
+                    {car?.name?.toLocaleLowerCase()}
                   </h3>
                   <p className="text-sm text-gray-400 mt-1">{car?.model}</p>
 
                   <div className="flex justify-between text-xs text-gray-400 border-b border-gray-700 pb-2 mt-2">
-                    <span>{car?.fuel_type}</span>
-                    <span>{car?.car_type}</span>
+                    <span className="capitalize">{car?.fuel_type?.toLocaleLowerCase()}</span>
+                    <span className="capitalize">{car?.car_type?.toLocaleLowerCase()}</span>
                     <span>{car?.mileage}</span>
                   </div>
 
