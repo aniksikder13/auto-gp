@@ -622,7 +622,7 @@ useEffect(() => {
                       {car?.fuel_type?.toLocaleLowerCase()}
                     </span>
                     <span className="capitalize">
-                      {car?.car_type?.toLocaleLowerCase()}
+                      {car?.car_type?.toLocaleLowerCase()?.replace(/_/g, " ")}
                     </span>
                     <span>{car?.mileage}</span>
                   </div>
