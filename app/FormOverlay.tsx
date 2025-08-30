@@ -1,7 +1,10 @@
 import { CheckCircle, Mail, Phone, Send, User, X } from "lucide-react";
+import { useParams } from "next/navigation";
 import { useState } from "react";
 
 const FormOverlay = () => {
+  const param = useParams()
+  const id = param?.id ?? 0
   const [isOpen, setIsOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -57,6 +60,7 @@ const FormOverlay = () => {
             name: formData.name,
             email: formData.email,
             phone: formData.phone,
+            car: +id
           }),
         }
       );
