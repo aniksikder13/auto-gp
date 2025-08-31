@@ -6,7 +6,7 @@ import CarsClient from "./CarsClient";
 const CAR_TYPE_CONFIGS = {
   all: {
     title: "Choose per your preference",
-    heading: " Reconditioned Unit",
+    heading: "Looking for <br /> Reconditioned Unit?",
     linkurl: "/cars/brand-new",
     description:
       "Glance through the widest collection of reconditioned Japanese models & pre-owned European units and choose according to your budget & quality preferences.",
@@ -17,7 +17,7 @@ const CAR_TYPE_CONFIGS = {
   },
   "brand-new": {
     title: "Choose per your preference",
-    heading: " Pre-owned Unit",
+    heading: "Looking for <br /> Pre-owned Unit?",
     linkurl: "/cars/pre-owned",
     description:
       "Glance through the widest collection of reconditioned Japanese models & pre-owned European units and choose according to your budget & quality preferences.",
@@ -29,7 +29,7 @@ const CAR_TYPE_CONFIGS = {
   },
   "pre-owned": {
     title: "Choose per your preference",
-    heading: " Reconditioned Unit",
+    heading: "Looking for <br /> Reconditioned Unit?",
     linkurl: "/cars/brand-new",
     description:
       "Glance through the widest collection of reconditioned Japanese models & pre-owned European units and choose according to your budget & quality preferences.",

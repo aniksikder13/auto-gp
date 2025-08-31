@@ -537,8 +537,9 @@ useEffect(() => {
               <div className="absolute inset-0 bg-black/10 flex items-end p-3 md:p-5">
                 <div className="flex items-center justify-between w-full text-white">
                   <div className="group ">
-                    <h2 className="text-xl md:text-3xl font-semibold mb-2 transition-all duration-300 group-hover:translate-x-1">
-                      {config.heading}
+                    <h2 
+                      className="text-xl md:text-3xl font-semibold mb-2 transition-all duration-300 group-hover:translate-x-1"
+                      dangerouslySetInnerHTML={{ __html: config.heading }}>
                     </h2>
                   </div>
                   <svg
