@@ -612,8 +612,8 @@ useEffect(() => {
 
                 {/* Card Content */}
                 <div className="p-4">
-                  <h3 className="text-base font-semibold leading-tight capitalize">
-                    {car?.name?.toLocaleLowerCase()}
+                  <h3 className="text-base font-semibold leading-tight">
+                    {car?.name}
                   </h3>
                   <p className="text-sm text-gray-400 mt-1">{car?.model}</p>
 
