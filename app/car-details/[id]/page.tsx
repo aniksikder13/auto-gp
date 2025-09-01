@@ -250,14 +250,14 @@ export default function CarDetail() {
                 <button
                   onClick={() => {
                     window.open(
-                      "https://calendly.com/begautos-sales/",
-                      "calendlyPopup",
+                      "https://wa.me/8802466900600",
+                      "WhatsApp",
                       "width=700,height=800,top=100,left=200"
                     );
                   }}
                   className="bg-amber-100 hover:bg-amber-200 w-full transition-colors duration-300 text-gray-900 font-medium py-3 px-4 rounded-lg cursor-pointer"
                 >
-                  Book An Appointment
+                  Get Connected on Whatsapp
                 </button>
               </div>
             </div>
@@ -266,15 +266,15 @@ export default function CarDetail() {
             <button
               onClick={() => {
                 window.open(
-                  "https://wa.me/8802466900600",
-                  "WhatsApp",
+                  "https://calendly.com/begautos-sales/",
+                  "calendlyPopup",
                   "width=700,height=800,top=100,left=200"
                 );
               }}
               className="p-2 rounded-lg bg-[rgba(255,221,237,0.12)] hover:bg-gray-800 transition cursor-pointer w-full"
             >
               <div className="w-full text-center rounded-[5px] font-bold py-3 px-4">
-                Need More Details? Contact Us
+                Book an Appointment
               </div>
             </button>
           </div>
