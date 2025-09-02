@@ -80,6 +80,8 @@ function formatBDT(amount: number) {
 }
 
 export default function CarsClient({ config }: CarsClientProps) {
+
+  const availabilities = ["Available", "Sold", "Booked"];
   // State for cars and loading
   const [cars, setCars] = useState<Car[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -96,7 +98,7 @@ export default function CarsClient({ config }: CarsClientProps) {
     useState<string>("");
   const [selectedBodyStyle, setSelectedBodyStyle] = useState<string>("");
   const [selectedPriceRange, setSelectedPriceRange] = useState<string>("");
-  const [selectedAvailability, setSelectedAvailability] = useState<string>("");
+  const [selectedAvailability, setSelectedAvailability] = useState<string>("Available");
 
   // Filter options
   const [brands, setBrands] = useState<Array<BrandType>>();
@@ -105,12 +107,6 @@ export default function CarsClient({ config }: CarsClientProps) {
   const [bodyStyles, setBodyStyles] = useState<{ id: number; body: string }[]>(
     []
   );
-
-  const [availabilities] = useState<string[]>([
-    "Available",
-    "Sold",
-    "Booked",
-  ]);
 
   // Pagination
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -314,7 +310,7 @@ useEffect(() => {
     setSelectedEngineCapacity("");
     setSelectedBodyStyle("");
     //  setSelectedPriceRange("");
-    setSelectedAvailability("");
+    // setSelectedAvailability("");
     setCurrentPage(1);
   }, [config]);
 
@@ -342,6 +338,7 @@ useEffect(() => {
   const paginate = (pageNumber: number) => {
     setCurrentPage(pageNumber);
   };
+
 
   return (
     <div className="flex flex-col md:flex-row gap-8 relative min-h-screen ">
@@ -385,9 +382,12 @@ useEffect(() => {
           </div>
           {/* Brand filter */}
           <div className="mb-4">
-            <label className="block text-sm font-medium mb-2">Brand</label>
+            <label className="block text-sm font-medium mb-2" htmlFor="brand">
+              Brand
+            </label>
             <div className="relative">
               <select
+                id="brand"
                 className="w-full p-2 bg-black border border-gray-700 rounded appearance-none"
                 value={selectedBrand}
                 onChange={(e) => setSelectedBrand(e.target.value)}
@@ -412,11 +412,15 @@ useEffect(() => {
           </div>
           {/* Model Generation filter */}
           <div className="mb-4">
-            <label className="block text-sm font-medium mb-2">
+            <label
+              className="block text-sm font-medium mb-2"
+              htmlFor="modelGeneration"
+            >
               Model Generation
             </label>
             <div className="relative">
               <select
+                id="modelGeneration"
                 className="w-full p-2 bg-black border border-gray-700 rounded appearance-none"
                 value={selectedModel}
                 onChange={(e) => setSelectedModel(e.target.value)}
@@ -442,9 +446,15 @@ useEffect(() => {
 
           {/* Body Style filter */}
           <div className="mb-4">
-            <label className="block text-sm font-medium mb-2">Body Style</label>
+            <label
+              className="block text-sm font-medium mb-2"
+              htmlFor="body_style"
+            >
+              Body Style
+            </label>
             <div className="relative">
               <select
+                id="body_style"
                 className="w-full p-2 bg-black border border-gray-700 rounded appearance-none"
                 value={selectedBodyStyle}
                 onChange={(e) => setSelectedBodyStyle(e.target.value)}
@@ -469,22 +479,30 @@ useEffect(() => {
           </div>
           {/* Availability filter */}
           <div className="mb-4">
-            <label className="block text-sm font-medium mb-2">
+            <label
+              className="block text-sm font-medium mb-2"
+              htmlFor="availability"
+            >
               Availability
             </label>
             <div className="relative">
               <select
+                id="availability"
                 className="w-full p-2 bg-black border border-gray-700 rounded appearance-none"
                 value={selectedAvailability}
                 onChange={(e) => setSelectedAvailability(e.target.value)}
               >
                 <option value="">All Available</option>
-                {availabilities.map((availability) => (
-                  <option key={availability} value={availability}>
+                {/* <option value="Available" selected>Available</option>
+                <option value="Sold">Sold</option>
+                <option value="Booked">Booked</option> */}
+                {availabilities.map((availability, index) => (
+                  <option key={index} value={availability}>
                     {availability}
                   </option>
                 ))}
               </select>
+
               <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-white">
                 <svg
                   className="fill-current h-4 w-4"
@@ -537,10 +555,10 @@ useEffect(() => {
               <div className="absolute inset-0 bg-black/10 flex items-end p-3 md:p-5">
                 <div className="flex items-center justify-between w-full text-white">
                   <div className="group ">
-                    <h2 
+                    <h2
                       className="text-xl md:text-3xl font-semibold mb-2 transition-all duration-300 group-hover:translate-x-1"
-                      dangerouslySetInnerHTML={{ __html: config.heading }}>
-                    </h2>
+                      dangerouslySetInnerHTML={{ __html: config.heading }}
+                    ></h2>
                   </div>
                   <svg
                     className="w-8 h-8 text-gray-600 rounded-[4px] bg-white p-1 ml-4 group-hover:translate-x-1 transition-transform duration-200"
