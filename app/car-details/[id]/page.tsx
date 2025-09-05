@@ -250,7 +250,7 @@ export default function CarDetail() {
                 <button
                   onClick={() => {
                     window.open(
-                      "https://wa.me/8802466900600",
+                      "https://wa.me/8801966900600",
                       "WhatsApp",
                       "width=700,height=800,top=100,left=200"
                     );
@@ -534,7 +534,7 @@ export default function CarDetail() {
                   <button
                     onClick={() => {
                       window.open(
-                        "https://wa.me/8802466900600",
+                        "https://wa.me/8801966900600",
                         "WhatsApp",
                         "width=700,height=800,top=100,left=200"
                       );
