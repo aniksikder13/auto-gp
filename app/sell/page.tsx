@@ -10,7 +10,7 @@ interface FormDataType {
   car_model: string;
   car_year: string;
   mileage: string;
-  price: string;
+  offered_price: string;
   images: File[]; // Changed from single image to array of images
 }
 
@@ -22,7 +22,7 @@ export default function SellYourCar() {
     car_model: "",
     car_year: "",
     mileage: "",
-    price: "",
+    offered_price: "",
     images: [], // Initialize as empty array
   });
   const [isChecked, setIsChecked] = useState(false);
@@ -68,7 +68,7 @@ export default function SellYourCar() {
       data.append("car_model", formData.car_model);
       data.append("car_year", formData.car_year);
       data.append("mileage", formData.mileage);
-      data.append("price", formData.price);
+      data.append("offered_price", formData.offered_price);
 
       // Append multiple images
       formData.images.forEach((image) => {
@@ -95,7 +95,7 @@ export default function SellYourCar() {
         car_model: "",
         car_year: "",
         mileage: "",
-        price: "",
+        offered_price: "",
         images: [],
       });
       setIsChecked(false);
@@ -244,11 +244,11 @@ export default function SellYourCar() {
               <div>
                 <input
                   type="text"
-                  id="price"
+                  id="offered_price"
                   placeholder="Offered Price"
                   className="w-full p-3 bg-transparent border border-gray-700 rounded-lg text-white"
                   required
-                  value={formData.price}
+                  value={formData.offered_price}
                   onChange={handleChange}
                 />
               </div>
