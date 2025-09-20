@@ -579,13 +579,13 @@ export default function CarDetail() {
         </div>
         {showImagePopup && (
           <div
-            className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center animate-fadeIn"
+            className="fixed w-full inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center animate-fadeIn"
             style={{
               animation: "fadeIn 0.3s ease-in-out",
             }}
           >
             <div
-              className="relative max-w-3xl w-full h-full p-4 animate-slideUp"
+              className="relative lg:max-w-7xl max-w-4xl w-full h-full p-4 animate-slideUp"
               style={{
                 animation: "slideUp 0.4s ease-out 0.1s both",
               }}
@@ -602,11 +602,11 @@ export default function CarDetail() {
               </button>
 
               {/* Main image container */}
-              <div className="relative w-full h-full flex items-center justify-center">
+              <div className="relative h-full flex items-center justify-center">
                 {/* Previous button */}
                 <button
                   onClick={prevImage}
-                  className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white text-3xl hover:text-gray-400 transition-all duration-200 z-10 bg-black bg-opacity-50 rounded-full w-12 h-12 flex items-center justify-center hover:scale-110 hover:bg-opacity-70 opacity-0 animate-slideInLeft"
+                  className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white text-3xl hover:text-gray-400 transition-all duration-200 z-10 sm:bg-black bg-opacity-50 rounded-full md:w-12 md:h-12 flex items-center justify-center hover:scale-110 hover:bg-opacity-70 opacity-0 animate-slideInLeft"
                   style={{
                     animation: "slideInLeft 0.4s ease-out 0.2s both",
                   }}
@@ -616,7 +616,7 @@ export default function CarDetail() {
 
                 {/* Image */}
                 <div
-                  className="relative w-full h-full mx-21 opacity-0 animate-zoomIn"
+                  className="relative w-full  h-full opacity-0 animate-zoomIn"
                   style={{
                     animation: "zoomIn 0.5s ease-out 0.2s both",
                   }}
@@ -625,7 +625,7 @@ export default function CarDetail() {
                     src={images[currentImageIndex].image}
                     alt={images[currentImageIndex].caption || car.name}
                     fill
-                    className="object-contain transition-opacity duration-300 ease-in-out"
+                    className="object-contain sm:w-full w-[350px] transition-opacity duration-300 ease-in-out"
                     key={currentImageIndex}
                   />
                 </div>
@@ -633,7 +633,7 @@ export default function CarDetail() {
                 {/* Next button */}
                 <button
                   onClick={nextImage}
-                  className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white text-3xl hover:text-gray-400 transition-all duration-200 z-10 bg-black bg-opacity-50 rounded-full w-12 h-12 flex items-center justify-center hover:scale-110 hover:bg-opacity-70 opacity-0 animate-slideInRight"
+                  className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white text-3xl hover:text-gray-400 transition-all duration-200 z-10 sm:bg-black bg-opacity-50 rounded-full md:w-12 md:h-12 flex items-center justify-center hover:scale-110 hover:bg-opacity-70 opacity-0 animate-slideInRight"
                   style={{
                     animation: "slideInRight 0.4s ease-out 0.2s both",
                   }}
