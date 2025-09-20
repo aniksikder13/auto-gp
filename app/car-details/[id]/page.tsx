@@ -318,7 +318,7 @@ export default function CarDetail() {
                 <p className="text-white font-medium">{car.drive_type}</p>
               </div>
               <div className=" p-4 rounded-lg">
-                <p className="text-gray-400 text-sm">Wheel Base</p>
+                <p className="text-gray-400 text-sm">Wheel</p>
                 <p className="text-white font-medium">{car.wheel_base}</p>
               </div>
               <div className=" p-4 rounded-lg">
