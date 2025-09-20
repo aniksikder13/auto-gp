@@ -65,6 +65,7 @@ interface CarsClientProps {
   config: Config;
 }
 function formatBDT(amount: number) {
+
   const takaSymbol = "BDT";
   const numStr = amount.toString();
   const [integer] = numStr.split(".");
@@ -647,7 +648,7 @@ useEffect(() => {
                   </div>
 
                   <p className="font-bold text-base mt-3">
-                    {Number(car?.price) === 0
+                    {car?.price === 'Sold' ? 'Sold' : Number(car?.price) === 0
                       ? "Contact for price"
                       : formatBDT(Number(car?.price))}
                   </p>

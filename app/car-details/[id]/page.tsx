@@ -30,7 +30,7 @@ interface Car {
   color: string;
   body_style: string;
   condition: string;
-  price: number;
+  price: number | string | null;
   description: string;
   youtube: string;
   registered: string;
@@ -158,9 +158,12 @@ export default function CarDetail() {
   // Prepare images array
   const images = car.inventory_images;
 
-  const formattedPrice = car?.price
-    ? formatBDT(car?.price)
-    : "Contact for price";
+  const formattedPrice =
+    car?.price === "Sold"
+      ? "Sold"
+      : car?.price
+      ? formatBDT(car?.price as number)
+      : "Contact for price";
 
   return (
     <div className="bg-black text-white min-h-screen container-responsive  mx-auto">
