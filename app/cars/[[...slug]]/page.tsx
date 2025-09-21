@@ -64,6 +64,23 @@ interface CarsPageProps {
   }>;
 }
 
+export interface BrandType {
+  id: number;
+  name: string;
+  image: string;
+}
+
+export interface ModelType {
+  id: number;
+  brand: string;
+  model: string;
+}
+
+export interface BodyStyleType {
+  id: number;
+  body: string;
+}
+
 export default async function ProductListing({ params }: CarsPageProps) {
   // Await the params promise
   const resolvedParams = await params;
@@ -73,6 +90,47 @@ export default async function ProductListing({ params }: CarsPageProps) {
   const config =
     CAR_TYPE_CONFIGS[carType as keyof typeof CAR_TYPE_CONFIGS] ||
     CAR_TYPE_CONFIGS.all;
+
+  // --- Fetch filters server-side ---
+  async function fetchFilters() {
+    try {
+      const [bodyStyleResponse, brandResponse, generationResponse] =
+        await Promise.all([
+          fetch(
+            `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/inventory/body-style/`,
+            { cache: "no-store" }
+          ),
+          fetch(
+            `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/inventory/brands/`,
+            {
+              cache: "no-store",
+            }
+          ),
+          fetch(
+            `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/inventory/generations/`,
+            { cache: "no-store" }
+          ),
+        ]);
+
+      const [bodyStyleData, brandData, generationData] = await Promise.all([
+        bodyStyleResponse.json(),
+        brandResponse.json(),
+        generationResponse.json(),
+      ]);
+
+      return {
+        brands: brandData?.success ? brandData.data : [],
+        models: generationData?.success ? generationData.data : [],
+        bodyStyles: bodyStyleData?.success ? bodyStyleData.data : [],
+      };
+    } catch (err) {
+      console.error("Error fetching filters:", err);
+      return { brands: [], models: [], bodyStyles: [] };
+    }
+  }
+
+  // ✅ Server-side filters
+  const filterdata = await fetchFilters();
 
   return (
     <div className="bg-black text-white min-h-screen container-responsive">
@@ -84,7 +142,7 @@ export default async function ProductListing({ params }: CarsPageProps) {
         </p>
 
         {/* Pass config to client component */}
-        <CarsClient config={config} />
+        <CarsClient config={config} filterdata={filterdata} />
       </div>
 
       {/* Footer with services */}
