@@ -17,6 +17,7 @@ interface CarImage {
 
 interface Car {
   id: number;
+  slightly_negotiable: 'YES' | 'NO';
   name: string;
   brand: string;
   model: string;
@@ -233,9 +234,9 @@ export default function CarDetail() {
               <h2 className="text-3xl font-bold text-white mb-2">
                 {formattedPrice}
               </h2>
-              <p className="text-gray-400 text-sm mb-6">
+              {car?.slightly_negotiable === 'YES' && <p className="text-gray-400 text-sm mb-6">
                 *Price may be slightly negotiable
-              </p>
+              </p>}
 
               <div className="mb-6">
                 <h3 className="text-white mb-2 font-medium">

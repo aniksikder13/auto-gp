@@ -221,7 +221,7 @@ export default function SellYourCar() {
                   <input
                     type="text"
                     id="car_year"
-                    placeholder="Year"
+                    placeholder="Reg. Year"
                     className="w-full p-3 bg-transparent border border-gray-700 rounded-lg text-white"
                     required
                     value={formData.car_year}
