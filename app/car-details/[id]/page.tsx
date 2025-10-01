@@ -166,6 +166,15 @@ export default function CarDetail() {
       ? formatBDT(car?.price as number)
       : "Contact for price";
 
+let slightly_negotiable = <></>;
+if (car?.slightly_negotiable?.toString().trim().toUpperCase() === "YES") {
+  slightly_negotiable = (
+    <p className="text-gray-400 text-sm mb-6">
+      *Price may be slightly negotiable
+    </p>
+  );
+}
+
   return (
     <div className="bg-black text-white min-h-screen container-responsive  mx-auto">
       <div className="container mx-auto px-4 py-8">
@@ -234,10 +243,7 @@ export default function CarDetail() {
               <h2 className="text-3xl font-bold text-white mb-2">
                 {formattedPrice}
               </h2>
-              {car?.slightly_negotiable === 'YES' && <p className="text-gray-400 text-sm mb-6">
-                *Price may be slightly negotiable
-              </p>}
-
+              {slightly_negotiable}
               <div className="mb-6">
                 <h3 className="text-white mb-2 font-medium">
                   Need help making a choice?
@@ -518,9 +524,7 @@ export default function CarDetail() {
                 <h2 className="text-3xl font-bold text-white mb-2">
                   {formattedPrice}
                 </h2>
-                <p className="text-gray-400 text-sm mb-6">
-                  *Price may be slightly negotiable
-                </p>
+                {slightly_negotiable}
 
                 <div className="mb-6">
                   <h3 className="text-white mb-2 font-medium">
