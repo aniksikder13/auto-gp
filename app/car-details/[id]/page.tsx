@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-
+import { Phone } from "lucide-react";
 import FormOverlay from "@/app/FormOverlay";
 import RelatedCarsCarousel from "@/app/RelatedCarsCarousel";
 
@@ -39,6 +39,18 @@ interface Car {
   inventory_images: CarImage[];
 }
 
+
+export interface ContactInfoRoot {
+  success: boolean;
+  message: string;
+  data: ContactInfoData[];
+}
+
+export interface ContactInfoData {
+  phone_number: string;
+}
+
+
 function formatBDT(amount: number) {
   const takaSymbol = "BDT";
   const numStr = amount.toString();
@@ -71,7 +83,8 @@ export default function CarDetail() {
   const [error, setError] = useState<string | null>(null);
   const [showImagePopup, setShowImagePopup] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-
+  const [get_a_call, set_get_a_call]=useState(false)
+  const [contactInfo, setContactInfro] = useState<ContactInfoData[]>();
   const [showVideo, setShowVideo] = useState(false);
 
   const openImagePopup = (index: number) => {
@@ -89,6 +102,22 @@ export default function CarDetail() {
   const prevImage = () => {
     setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
   };
+
+  useEffect(() => {
+    (async function(){
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/home/sales-representative/`
+      );
+      if (!response.ok) {
+        throw new Error("Failed to fetch car details");
+      }
+
+      const result = await response.json();
+      if (result?.success) {
+        setContactInfro(result.data);
+      } 
+    })()
+  },[])
 
   useEffect(() => {
     if (!id) return;
@@ -255,8 +284,44 @@ if (car?.slightly_negotiable?.toString().trim().toUpperCase() === "YES") {
               </div>
 
               <div className="space-y-4">
-                <FormOverlay />
+                <div>
+                  <button
+                    onClick={() => {
+                      if (contactInfo && contactInfo?.length > 0) {
+                        set_get_a_call(true);
+                      }
+                    }}
+                    className={`w-full bg-[rgba(255,221,187,1)] text-black font-bold py-3 px-4 rounded-lg hover:bg-[rgba(139,100,61,1)] transition cursor-pointer ${
+                      get_a_call ? "hidden" : "block"
+                    }`}
+                  >
+                    GET A CALL
+                  </button>
+                  {get_a_call && (
+                    <div className="bg-[rgba(255,221,237,0.12)] text-white rounded-xl p-4 pb-8 w-full space-y-3">
+                      <h2 className="text-sm font-medium text-gray-300 mb-4">
+                        Senior Sales Representative
+                      </h2>
 
+                      {contactInfo?.map((item, index) => (
+                        <div
+                          key={index}
+                          className="flex items-center justify-between border-b border-gray-500 px-3 py-2 transition"
+                        >
+                          <span className="text-sm tracking-wide">
+                            {item?.phone_number}
+                          </span>
+                          <a
+                            href={`tel:${item?.phone_number}`}
+                            className="text-gray-400 hover:text-white"
+                          >
+                            <Phone size={16} />
+                          </a>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
                 <button
                   onClick={() => {
                     window.open(
@@ -269,6 +334,7 @@ if (car?.slightly_negotiable?.toString().trim().toUpperCase() === "YES") {
                 >
                   Get Connected on Whatsapp
                 </button>
+                <FormOverlay />
               </div>
             </div>
 
@@ -537,8 +603,44 @@ if (car?.slightly_negotiable?.toString().trim().toUpperCase() === "YES") {
                 </div>
 
                 <div className="space-y-4">
-                  <FormOverlay />
+                  <div>
+                    <button
+                      onClick={() => {
+                        if (contactInfo && contactInfo?.length > 0) {
+                          set_get_a_call(true);
+                        }
+                      }}
+                      className={`w-full bg-[rgba(255,221,187,1)] text-black font-bold py-3 px-4 rounded-lg hover:bg-[rgba(139,100,61,1)] transition cursor-pointer ${
+                        get_a_call ? "hidden" : "block"
+                      }`}
+                    >
+                      GET A CALL
+                    </button>
+                    {get_a_call && (
+                      <div className="bg-[rgba(255,221,237,0.12)] text-white rounded-xl p-4 pb-8 w-full space-y-3">
+                        <h2 className="text-sm font-medium text-gray-300 mb-4">
+                          Senior Sales Representative
+                        </h2>
 
+                        {contactInfo?.map((item, index) => (
+                          <div
+                            key={index}
+                            className="flex items-center justify-between border-b border-gray-500 px-3 py-2 transition"
+                          >
+                            <span className="text-sm tracking-wide">
+                              {item?.phone_number}
+                            </span>
+                            <a
+                              href={`tel:${item?.phone_number}`}
+                              className="text-gray-400 hover:text-white"
+                            >
+                              <Phone size={16} />
+                            </a>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                   <button
                     onClick={() => {
                       window.open(
@@ -551,6 +653,7 @@ if (car?.slightly_negotiable?.toString().trim().toUpperCase() === "YES") {
                   >
                     Get Connected on Whatsapp
                   </button>
+                  <FormOverlay />
                 </div>
               </div>
 
