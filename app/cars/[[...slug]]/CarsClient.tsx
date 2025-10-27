@@ -277,11 +277,8 @@ export default function CarsClient({ config, filterdata }: CarsClientProps) {
       ) : (
         <>
           {/* Mobile Filter Button */}
-          <div className="md:hidden">
-            <SearchBar
-              query={search}
-              setQuery={setSearch}
-            />
+          <div className="md:hidden grid grid-cols-1 w-full">
+            <SearchBar query={search} setQuery={setSearch} />
             <div className="flex justify-center mb-4 mt-5">
               <button
                 className="w-full bg-black border border-gray-700 text-white py-2 rounded hover:bg-gray-800 transition flex items-center justify-center gap-2"
@@ -313,11 +310,8 @@ export default function CarsClient({ config, filterdata }: CarsClientProps) {
             }`}
           >
             <div className="md:sticky md:top-24 md:mb-15 relative z-50 bg-black sm:p-4 rounded-lg">
-              <div className="max-sm:hidden sm:mb-7">
-                <SearchBar
-                  query={search}
-                  setQuery={setSearch}
-                />
+              <div className="max-sm:hidden sm:mb-7 grid grid-cols-1 w-full">
+                <SearchBar query={search} setQuery={setSearch} />
               </div>
               <h2 className="text-xl font-bold mb-4">Filter</h2>
               <div className="relative z-50">
