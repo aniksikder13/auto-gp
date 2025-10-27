@@ -291,43 +291,52 @@ if (car?.slightly_negotiable?.toString().trim().toUpperCase() === "YES") {
                         set_get_a_call(true);
                       }
                     }}
-                    className={`w-full bg-[rgba(255,221,187,1)] text-black font-bold py-3 px-4 rounded-lg hover:bg-[rgba(139,100,61,1)] transition cursor-pointer ${
-                      get_a_call ? "hidden" : "block"
+                    className={`w-full bg-[rgba(255,221,187,1)] text-black font-bold rounded-lg hover:bg-[rgba(139,100,61,1)] transition-opacity cursor-pointer ${
+                      get_a_call
+                        ? "opacity-0 pointer-events-none scale-90 py-0 px-0"
+                        : "opacity-100 scale-100 py-3 px-4"
                     }`}
+                    style={{ transition: "0.5s" }}
                   >
                     GET A CALL
                   </button>
-                  {get_a_call && (
-                    <div className="bg-[rgba(255,221,237,0.12)] text-white rounded-xl p-4 pb-8 w-full space-y-3">
-                      <h2
-                        onClick={() => {
-                          set_get_a_call(false);
-                        }}
-                        className="text-sm font-medium text-gray-300 mb-4 flex justify-between items-center cursor-pointer
-                          "
-                      >
-                        Senior Sales Representative
-                        <ChevronUp className="text-gray-300 mr-2 w-5 h-5 inline-block" />
-                      </h2>
 
-                      {contactInfo?.map((item, index) => (
-                        <div
-                          key={index}
-                          className="flex items-center justify-between border-b border-gray-500 px-3 py-2 transition"
+                  <div
+                    className={`bg-[rgba(255,221,237,0.12)] text-white rounded-xl w-full ${
+                      get_a_call
+                        ? "opacity-100 scale-100 max-h-[500px] p-4 pb-8 space-y-3 -mt-5"
+                        : "opacity-0 scale-95 max-h-0 overflow-hidden"
+                    }`}
+                    style={{ transition: "0.5s" }}
+                  >
+                    <h2
+                      onClick={() => {
+                        set_get_a_call(false);
+                      }}
+                      className="text-sm font-medium text-gray-300 mb-4 flex justify-between items-center cursor-pointer
+                        "
+                    >
+                      Senior Sales Representative
+                      <ChevronUp className="text-gray-300 mr-2 w-5 h-5 inline-block" />
+                    </h2>
+
+                    {contactInfo?.map((item, index) => (
+                      <div
+                        key={index}
+                        className="flex items-center justify-between border-b border-gray-500 px-3 py-2 transition"
+                      >
+                        <span className="text-sm tracking-wide">
+                          {item?.phone_number}
+                        </span>
+                        <a
+                          href={`tel:${item?.phone_number}`}
+                          className="text-gray-400 hover:text-white"
                         >
-                          <span className="text-sm tracking-wide">
-                            {item?.phone_number}
-                          </span>
-                          <a
-                            href={`tel:${item?.phone_number}`}
-                            className="text-gray-400 hover:text-white"
-                          >
-                            <Phone size={16} />
-                          </a>
-                        </div>
-                      ))}
-                    </div>
-                  )}
+                          <Phone size={16} />
+                        </a>
+                      </div>
+                    ))}
+                  </div>
                 </div>
                 <button
                   onClick={() => {
@@ -617,43 +626,52 @@ if (car?.slightly_negotiable?.toString().trim().toUpperCase() === "YES") {
                           set_get_a_call(true);
                         }
                       }}
-                      className={`w-full bg-[rgba(255,221,187,1)] text-black font-bold py-3 px-4 rounded-lg hover:bg-[rgba(139,100,61,1)] transition cursor-pointer ${
-                        get_a_call ? "hidden" : "block"
+                      className={`w-full bg-[rgba(255,221,187,1)] text-black font-bold rounded-lg hover:bg-[rgba(139,100,61,1)] transition-opacity cursor-pointer ${
+                        get_a_call
+                          ? "opacity-0 pointer-events-none scale-90 py-0 px-0"
+                          : "opacity-100 scale-100 py-3 px-4"
                       }`}
+                      style={{ transition: "0.5s" }}
                     >
                       GET A CALL
                     </button>
-                    {get_a_call && (
-                      <div className="bg-[rgba(255,221,237,0.12)] text-white rounded-xl p-4 pb-8 w-full space-y-3">
-                        <h2
-                          onClick={() => {
-                            set_get_a_call(false);
-                          }}
-                          className="text-sm font-medium text-gray-300 mb-4 flex justify-between items-center cursor-pointer
-                          "
-                        >
-                          Senior Sales Representative
-                          <ChevronUp className="text-gray-300 mr-2 w-5 h-5 inline-block" />
-                        </h2>
 
-                        {contactInfo?.map((item, index) => (
-                          <div
-                            key={index}
-                            className="flex items-center justify-between border-b border-gray-500 px-3 py-2 transition"
+                    <div
+                      className={`bg-[rgba(255,221,237,0.12)] text-white rounded-xl w-full ${
+                        get_a_call
+                          ? "opacity-100 scale-100 max-h-[500px] p-4 pb-8 space-y-3 -mt-5"
+                          : "opacity-0 scale-95 max-h-0 overflow-hidden"
+                      }`}
+                      style={{ transition: "0.5s" }}
+                    >
+                      <h2
+                        onClick={() => {
+                          set_get_a_call(false);
+                        }}
+                        className="text-sm font-medium text-gray-300 mb-4 flex justify-between items-center cursor-pointer
+                        "
+                      >
+                        Senior Sales Representative
+                        <ChevronUp className="text-gray-300 mr-2 w-5 h-5 inline-block" />
+                      </h2>
+
+                      {contactInfo?.map((item, index) => (
+                        <div
+                          key={index}
+                          className="flex items-center justify-between border-b border-gray-500 px-3 py-2 transition"
+                        >
+                          <span className="text-sm tracking-wide">
+                            {item?.phone_number}
+                          </span>
+                          <a
+                            href={`tel:${item?.phone_number}`}
+                            className="text-gray-400 hover:text-white"
                           >
-                            <span className="text-sm tracking-wide">
-                              {item?.phone_number}
-                            </span>
-                            <a
-                              href={`tel:${item?.phone_number}`}
-                              className="text-gray-400 hover:text-white"
-                            >
-                              <Phone size={16} />
-                            </a>
-                          </div>
-                        ))}
-                      </div>
-                    )}
+                            <Phone size={16} />
+                          </a>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                   <button
                     onClick={() => {
