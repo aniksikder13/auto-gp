@@ -310,7 +310,7 @@ export default function CarsClient({ config, filterdata }: CarsClientProps) {
             }`}
           >
             <div className="md:sticky md:top-24 md:mb-15 relative z-50 bg-black sm:p-4 rounded-lg">
-              <div className="max-sm:hidden sm:mb-7 grid grid-cols-1 w-full">
+              <div className="max-md:hidden sm:mb-7">
                 <SearchBar query={search} setQuery={setSearch} />
               </div>
               <h2 className="text-xl font-bold mb-4">Filter</h2>
