@@ -7,7 +7,7 @@ interface Props {
 
 export default function SearchBar({setQuery, query}:Props) {
   return (
-    <div className="flex items-center justify-between border border-gray-500 rounded-full px-3 py-3 sm:py-2 w-full box-border bg-gray-800">
+    <div className="flex items-center justify-between border border-gray-500 rounded-xl px-3 py-3 sm:py-2 w-full box-border ">
       <div className="flex">
         <Search className="text-gray-300 mr-2 w-5 h-5 inline-block" />
         <input
