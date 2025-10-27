@@ -66,6 +66,14 @@ export default function Footer() {
               </li>
               <li>
                 <Link
+                  href="/cars"
+                  className="text-white hover:text-gray-300 flex items-center"
+                >
+                  <span className="mr-2">-</span> Inventory
+                </Link>
+              </li>
+              <li>
+                <Link
                   href="/about"
                   className="text-white hover:text-gray-300 flex items-center"
                 >
@@ -369,7 +377,8 @@ export default function Footer() {
             />
           </div>
           <p className="text-gray-500 text-sm text-center">
-            Copyright ©2022 All rights reserved | @begautos
+            Copyright ©{new Date().getFullYear()} All rights reserved |
+            @begautos
           </p>
         </div>
       </div>

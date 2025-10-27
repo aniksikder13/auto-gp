@@ -98,7 +98,7 @@ const StockPopupOverlay = () => {
       {/* Stock Button */}
       <button
         onClick={openPopup}
-        className="flex items-center justify-center bg-white/10 transition hover:bg-white/20 rounded w-[30px] h-[30px] cursor-pointer border-blue-300 border-2"
+        className="flex items-center justify-center bg-white/10 transition hover:bg-white/20 rounded cursor-pointer border-blue-300 border-1"
       >
         <div className="relative w-6 h-6  m-auto  overflow-hidden">
           <Image

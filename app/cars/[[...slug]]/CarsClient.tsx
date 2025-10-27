@@ -4,6 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import PriceRangeFilter from "./PriceRangeFilter";
+import { BodyStyleType, BrandType, ModelType } from "./page";
+import SearchBar from "@/components/ui/searchbar";
 
 // Define Car interface
 interface Car {
@@ -18,6 +20,7 @@ interface Car {
   price: string;
   feature_image: string;
   body_style?: number;
+  car_type?: string;
   registered: string;
   availability?: string;
 }
@@ -50,8 +53,14 @@ interface Config {
 
 interface CarsClientProps {
   config: Config;
+  filterdata: {
+    brands: Array<BrandType> | undefined;
+    models: Array<ModelType> | undefined;
+    bodyStyles: Array<BodyStyleType> | undefined;
+  };
 }
 function formatBDT(amount: number) {
+
   const takaSymbol = "BDT";
   const numStr = amount.toString();
   const [integer] = numStr.split(".");
@@ -66,11 +75,15 @@ function formatBDT(amount: number) {
   return `${takaSymbol} ${formattedInteger}`;
 }
 
-export default function CarsClient({ config }: CarsClientProps) {
+export default function CarsClient({ config, filterdata }: CarsClientProps) {
+  const { brands, models, bodyStyles } = filterdata;
+  const availabilities = ["Available", "Sold", "Booked"];
   // State for cars and loading
   const [cars, setCars] = useState<Car[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  // const [loadingFilters, setLoadingFilters] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [search, setSearch] = useState<string>()
 
   // Mobile filter state
   const [showMobileFilters, setShowMobileFilters] = useState<boolean>(false);
@@ -83,26 +96,23 @@ export default function CarsClient({ config }: CarsClientProps) {
     useState<string>("");
   const [selectedBodyStyle, setSelectedBodyStyle] = useState<string>("");
   const [selectedPriceRange, setSelectedPriceRange] = useState<string>("");
-  const [selectedAvailability, setSelectedAvailability] = useState<string>("");
-
-  // Filter options
-  const [brands, setBrands] = useState<string[]>([]);
-  const [models, setModels] = useState<string[]>([]);
-
-  const [bodyStyles, setBodyStyles] = useState<{ id: number; body: string }[]>(
-    []
-  );
-
-  const [availabilities] = useState<string[]>([
-    "Available",
-    "Sold",
-    "Reserved",
-  ]);
+  const [selectedAvailability, setSelectedAvailability] =
+    useState<string>("Available");
 
   // Pagination
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(10);
   const carsPerPage = 12;
+
+    const [debouncedSearch, setDebouncedSearch] = useState(search);
+
+    useEffect(() => {
+      const handler = setTimeout(() => {
+        setDebouncedSearch(search);
+      }, 600); // 600ms delay
+
+      return () => clearTimeout(handler); // cleanup previous timer
+    }, [search]);
 
   // Helper function to build API URL with filters
   const buildApiUrl = useCallback(
@@ -120,6 +130,7 @@ export default function CarsClient({ config }: CarsClientProps) {
       });
 
       // Add filter parameters
+      if (debouncedSearch) params.append("q", debouncedSearch);
       if (selectedBrand) params.append("brand", selectedBrand);
       if (selectedModel) params.append("model", selectedModel);
       if (selectedYear) params.append("year", selectedYear);
@@ -149,7 +160,7 @@ export default function CarsClient({ config }: CarsClientProps) {
 
       // Handle availability
       if (selectedAvailability) {
-        params.append("availability", selectedAvailability);
+        params.append("registered", selectedAvailability);
       }
 
       return `${baseUrl}?${params.toString()}`;
@@ -164,41 +175,9 @@ export default function CarsClient({ config }: CarsClientProps) {
       selectedBodyStyle,
       selectedPriceRange,
       selectedAvailability,
+      debouncedSearch,
     ]
   );
-
-  // Fetch filter options (only once at initial load)
-  const fetchFilterOptions = useCallback(async () => {
-    try {
-      // Build URL with base params for getting filter options
-      const baseUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/inventory/`;
-      const params = new URLSearchParams();
-      params.append("limit", "100");
-
-      // Add base parameters for car type
-      Object.entries(config.baseApiParams).forEach(([key, value]) => {
-        params.append(key, value);
-      });
-
-      const response = await fetch(`${baseUrl}?${params.toString()}`);
-      const data: ApiResponse = await response.json();
-
-      if (data.success) {
-        const carsData = data.data.results;
-        const uniqueBrands = Array.from(
-          new Set(carsData.map((car) => car.brand))
-        );
-        const uniqueModels = Array.from(
-          new Set(carsData.map((car) => car.model))
-        );
-
-        setBrands(uniqueBrands);
-        setModels(uniqueModels);
-      }
-    } catch (err) {
-      console.error("Error fetching filter options:", err);
-    }
-  }, [config.baseApiParams]);
 
   // Fetch cars with filters
   const fetchCars = useCallback(
@@ -209,9 +188,9 @@ export default function CarsClient({ config }: CarsClientProps) {
         const response = await fetch(apiUrl);
         const data: ApiResponse = await response.json();
 
-        if (data.success) {
-          setCars(data.data.results);
-          setTotalPages(data.data.total_page);
+        if (data?.success) {
+          setCars(data?.data?.results);
+          setTotalPages(data?.data?.total_page);
         } else {
           setError("Failed to fetch cars data");
         }
@@ -225,34 +204,32 @@ export default function CarsClient({ config }: CarsClientProps) {
     [buildApiUrl]
   );
 
-  // fetch body styles from API
-  const fetchBodyStyles = async () => {
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/inventory/body-style/`
-      );
-      const data = await response.json();
-
-      if (data.success) {
-        setBodyStyles(data.data);
-      } else {
-        console.error("Failed to fetch body styles");
-      }
-    } catch (err) {
-      console.error("Error fetching body styles:", err);
-    }
-  };
-
-  // Load initial filter options and body styles
+  // Fetch cars when filters change
   useEffect(() => {
-    fetchFilterOptions();
-    fetchBodyStyles();
-  }, [fetchFilterOptions]);
+    fetchCars();
+  }, [
+    selectedBrand,
+    selectedModel,
+    selectedAvailability,
+    selectedBodyStyle,
+    selectedPriceRange,
+    debouncedSearch,
+  ]);
 
   // Fetch cars whenever filters or pagination changes
   useEffect(() => {
     fetchCars(currentPage);
-  }, [currentPage, fetchCars]);
+  }, [
+    currentPage,
+    selectedBrand,
+    selectedModel,
+    selectedYear,
+    selectedEngineCapacity,
+    selectedBodyStyle,
+    selectedPriceRange,
+    selectedAvailability,
+    fetchCars,
+  ]);
 
   // Reset filters when config changes
   useEffect(() => {
@@ -262,7 +239,7 @@ export default function CarsClient({ config }: CarsClientProps) {
     setSelectedEngineCapacity("");
     setSelectedBodyStyle("");
     //  setSelectedPriceRange("");
-    setSelectedAvailability("");
+    // setSelectedAvailability("");
     setCurrentPage(1);
   }, [config]);
 
@@ -276,13 +253,14 @@ export default function CarsClient({ config }: CarsClientProps) {
     //   setSelectedPriceRange("");
     setSelectedAvailability("");
     setCurrentPage(1);
+    setSearch("")
   };
 
   // Apply filters and close mobile filters
   const applyFilters = () => {
     setCurrentPage(1);
     setShowMobileFilters(false);
-    fetchCars(1);
+    // fetchCars(1);
   };
 
   // Pagination
@@ -292,184 +270,227 @@ export default function CarsClient({ config }: CarsClientProps) {
 
   return (
     <div className="flex flex-col md:flex-row gap-8 relative min-h-screen ">
-      {/* Mobile Filter Button */}
-      <div className="md:hidden flex justify-center mb-4">
-        <button
-          className="w-full bg-black border border-gray-700 text-white py-2 rounded hover:bg-gray-800 transition flex items-center justify-center gap-2"
-          onClick={() => setShowMobileFilters(!showMobileFilters)}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
-            />
-          </svg>
-          {showMobileFilters ? "Hide Filters" : "Show Filters"}
-        </button>
-      </div>
-
-      {/* Filter Sidebar - Hidden on mobile by default, shown when button clicked */}
-      <div
-        className={`w-full md:w-1/5 ${
-          showMobileFilters ? "block" : "hidden md:block"
-        }`}
-      >
-        <div className="md:sticky md:top-24 md:mb-15 relative z-50 bg-black p-4 rounded-lg">
-          <h2 className="text-xl font-bold mb-4">Filter</h2>
-          <div className="relative z-50">
-            <PriceRangeFilter
-              selectedPriceRange={selectedPriceRange}
-              onPriceRangeChange={setSelectedPriceRange}
-            />
-          </div>
-          {/* Brand filter */}
-          <div className="mb-4">
-            <label className="block text-sm font-medium mb-2">Brand</label>
-            <div className="relative">
-              <select
-                className="w-full p-2 bg-black border border-gray-700 rounded appearance-none"
-                value={selectedBrand}
-                onChange={(e) => setSelectedBrand(e.target.value)}
-              >
-                <option value="">All Brands</option>
-                {brands.map((brand) => (
-                  <option key={brand} value={brand}>
-                    {brand}
-                  </option>
-                ))}
-              </select>
-              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-white">
-                <svg
-                  className="fill-current h-4 w-4"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
-                >
-                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                </svg>
-              </div>
-            </div>
-          </div>
-          {/* Model Generation filter */}
-          <div className="mb-4">
-            <label className="block text-sm font-medium mb-2">
-              Model Generation
-            </label>
-            <div className="relative">
-              <select
-                className="w-full p-2 bg-black border border-gray-700 rounded appearance-none"
-                value={selectedModel}
-                onChange={(e) => setSelectedModel(e.target.value)}
-              >
-                <option value="">All Model</option>
-                {models.map((model) => (
-                  <option key={model} value={model}>
-                    {model}
-                  </option>
-                ))}
-              </select>
-              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-white">
-                <svg
-                  className="fill-current h-4 w-4"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
-                >
-                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                </svg>
-              </div>
-            </div>
-          </div>
-
-          {/* Body Style filter */}
-          <div className="mb-4">
-            <label className="block text-sm font-medium mb-2">Body Style</label>
-            <div className="relative">
-              <select
-                className="w-full p-2 bg-black border border-gray-700 rounded appearance-none"
-                value={selectedBodyStyle}
-                onChange={(e) => setSelectedBodyStyle(e.target.value)}
-              >
-                <option value="">All Body style</option>
-                {bodyStyles.map((style) => (
-                  <option key={style.id} value={style.id.toString()}>
-                    {style.body}
-                  </option>
-                ))}
-              </select>
-              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-white">
-                <svg
-                  className="fill-current h-4 w-4"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
-                >
-                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                </svg>
-              </div>
-            </div>
-          </div>
-          {/* Availability filter */}
-          <div className="mb-4">
-            <label className="block text-sm font-medium mb-2">
-              Availability
-            </label>
-            <div className="relative">
-              <select
-                className="w-full p-2 bg-black border border-gray-700 rounded appearance-none"
-                value={selectedAvailability}
-                onChange={(e) => setSelectedAvailability(e.target.value)}
-              >
-                <option value="">All Available</option>
-                {availabilities.map((availability) => (
-                  <option key={availability} value={availability.toLowerCase()}>
-                    {availability}
-                  </option>
-                ))}
-              </select>
-              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-white">
-                <svg
-                  className="fill-current h-4 w-4"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
-                >
-                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                </svg>
-              </div>
-            </div>
-          </div>
-
-          {/* Apply Filters Button (Mobile Only) */}
-          <div className="md:hidden flex gap-2">
-            <button
-              className="flex-1 bg-gray-700 border border-gray-600 text-white py-2 rounded hover:bg-gray-600 transition"
-              onClick={() => setShowMobileFilters(false)}
-            >
-              Cancel
-            </button>
-            <button
-              className="flex-1 bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
-              onClick={applyFilters}
-            >
-              Apply Filters
-            </button>
-          </div>
-
-          {/* Reset filters button */}
-          <button
-            className="w-full bg-black border border-gray-700 text-white py-2 rounded hover:bg-gray-800 transition mt-4"
-            onClick={resetFilters}
-          >
-            Reset All Filters
-          </button>
+      {loading === true ? (
+        <div className="text-center py-12 w-full md:w-1/5">
+          <p className="text-lg text-gray-400">Loading filters...</p>
         </div>
-      </div>
+      ) : (
+        <>
+          {/* Mobile Filter Button */}
+          <div className="md:hidden">
+            <SearchBar
+              query={search}
+              setQuery={setSearch}
+            />
+            <div className="flex justify-center mb-4 mt-5">
+              <button
+                className="w-full bg-black border border-gray-700 text-white py-2 rounded hover:bg-gray-800 transition flex items-center justify-center gap-2"
+                onClick={() => setShowMobileFilters(!showMobileFilters)}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
+                  />
+                </svg>
+                {showMobileFilters ? "Hide Filters" : "Show Filters"}
+              </button>
+            </div>
+          </div>
 
+          {/* Filter Sidebar - Hidden on mobile by default, shown when button clicked */}
+          <div
+            className={`w-full md:w-[21.2%] ${
+              showMobileFilters ? "block" : "hidden md:block"
+            }`}
+          >
+            <div className="md:sticky md:top-24 md:mb-15 relative z-50 bg-black sm:p-4 rounded-lg">
+              <div className="max-sm:hidden sm:mb-7">
+                <SearchBar
+                  query={search}
+                  setQuery={setSearch}
+                />
+              </div>
+              <h2 className="text-xl font-bold mb-4">Filter</h2>
+              <div className="relative z-50">
+                <PriceRangeFilter
+                  selectedPriceRange={selectedPriceRange}
+                  onPriceRangeChange={setSelectedPriceRange}
+                />
+              </div>
+              {/* Brand filter */}
+              <div className="mb-4">
+                <label
+                  className="block text-sm font-medium mb-2"
+                  htmlFor="brand"
+                >
+                  Brand
+                </label>
+                <div className="relative">
+                  <select
+                    id="brand"
+                    className="w-full p-2 bg-black border border-gray-700 rounded appearance-none"
+                    value={selectedBrand}
+                    onChange={(e) => setSelectedBrand(e.target.value)}
+                  >
+                    <option value="">All Brands</option>
+                    {brands?.map((brand, index) => (
+                      <option key={index} value={brand?.name}>
+                        {brand?.name}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-white">
+                    <svg
+                      className="fill-current h-4 w-4"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                    >
+                      <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+              {/* Model Generation filter */}
+              <div className="mb-4">
+                <label
+                  className="block text-sm font-medium mb-2"
+                  htmlFor="modelGeneration"
+                >
+                  Model Generation
+                </label>
+                <div className="relative">
+                  <select
+                    id="modelGeneration"
+                    className="w-full p-2 bg-black border border-gray-700 rounded appearance-none"
+                    value={selectedModel}
+                    onChange={(e) => setSelectedModel(e.target.value)}
+                  >
+                    <option value="">All Model</option>
+                    {models?.map((model, index) => (
+                      <option key={index} value={model?.model}>
+                        {model?.model}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-white">
+                    <svg
+                      className="fill-current h-4 w-4"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                    >
+                      <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+
+              {/* Body Style filter */}
+              <div className="mb-4">
+                <label
+                  className="block text-sm font-medium mb-2"
+                  htmlFor="body_style"
+                >
+                  Body Style
+                </label>
+                <div className="relative">
+                  <select
+                    id="body_style"
+                    className="w-full p-2 bg-black border border-gray-700 rounded appearance-none"
+                    value={selectedBodyStyle}
+                    onChange={(e) => setSelectedBodyStyle(e.target.value)}
+                  >
+                    <option value="">All Body style</option>
+                    {bodyStyles?.map((style) => (
+                      <option key={style.id} value={style.id.toString()}>
+                        {style.body}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-white">
+                    <svg
+                      className="fill-current h-4 w-4"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                    >
+                      <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+              {/* Availability filter */}
+              <div className="mb-4">
+                <label
+                  className="block text-sm font-medium mb-2"
+                  htmlFor="availability"
+                >
+                  Availability
+                </label>
+                <div className="relative">
+                  <select
+                    id="availability"
+                    className="w-full p-2 bg-black border border-gray-700 rounded appearance-none"
+                    value={selectedAvailability}
+                    onChange={(e) => setSelectedAvailability(e.target.value)}
+                  >
+                    <option value="">All Available</option>
+                    {/* <option value="Available" selected>Available</option>
+                  <option value="Sold">Sold</option>
+                  <option value="Booked">Booked</option> */}
+                    {availabilities.map((availability, index) => (
+                      <option key={index} value={availability}>
+                        {availability}
+                      </option>
+                    ))}
+                  </select>
+
+                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-white">
+                    <svg
+                      className="fill-current h-4 w-4"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                    >
+                      <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+
+              {/* Apply Filters Button (Mobile Only) */}
+              <div className="md:hidden flex gap-2">
+                <button
+                  className="flex-1 bg-gray-700 border border-gray-600 text-white py-2 rounded hover:bg-gray-600 transition"
+                  onClick={() => setShowMobileFilters(false)}
+                >
+                  Cancel
+                </button>
+                <button
+                  className="flex-1 bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
+                  onClick={applyFilters}
+                >
+                  Apply Filters
+                </button>
+              </div>
+
+              {/* Reset filters button */}
+              <button
+                className="w-full bg-black border border-gray-700 text-white py-2 rounded hover:bg-gray-800 transition mt-4"
+                onClick={resetFilters}
+              >
+                Reset All Filters
+              </button>
+            </div>
+          </div>
+        </>
+      )}
       {/* Right side for car listings */}
       <div className="w-full md:w-4/5">
         {/* Dynamic banner */}
@@ -484,9 +505,10 @@ export default function CarsClient({ config }: CarsClientProps) {
               <div className="absolute inset-0 bg-black/10 flex items-end p-3 md:p-5">
                 <div className="flex items-center justify-between w-full text-white">
                   <div className="group ">
-                    <h2 className="text-xl md:text-3xl font-semibold mb-2 transition-all duration-300 group-hover:translate-x-1">
-                      {config.heading}
-                    </h2>
+                    <h2
+                      className="text-xl md:text-3xl font-semibold mb-2 transition-all duration-300 group-hover:translate-x-1"
+                      dangerouslySetInnerHTML={{ __html: config.heading }}
+                    ></h2>
                   </div>
                   <svg
                     className="w-8 h-8 text-gray-600 rounded-[4px] bg-white p-1 ml-4 group-hover:translate-x-1 transition-transform duration-200"
@@ -530,7 +552,7 @@ export default function CarsClient({ config }: CarsClientProps) {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-6">
-            {cars.map((car) => (
+            {cars?.map((car) => (
               <Link
                 key={car.id}
                 href={`/car-details/${car.id}`}
@@ -538,12 +560,15 @@ export default function CarsClient({ config }: CarsClientProps) {
               >
                 {/* Image */}
                 <div className="relative z-10">
-                  {car.feature_image ? (
+                  {car?.feature_image ? (
                     <Image
-                      src={car.feature_image}
-                      alt={car.name}
+                      src={car?.feature_image}
+                      alt={car?.name}
                       width={292}
                       height={243}
+                      // quality={70}
+                      placeholder="blur"
+                      blurDataURL="/images/car-placeholder.jpg"
                       className="w-full h-[243px] object-cover"
                       priority
                     />
@@ -557,18 +582,26 @@ export default function CarsClient({ config }: CarsClientProps) {
                 {/* Card Content */}
                 <div className="p-4">
                   <h3 className="text-base font-semibold leading-tight">
-                    {car.name}
+                    {car?.name}
                   </h3>
-                  <p className="text-sm text-gray-400 mt-1">{car.model}</p>
+                  <p className="text-sm text-gray-400 mt-1">{car?.model}</p>
 
                   <div className="flex justify-between text-xs text-gray-400 border-b border-gray-700 pb-2 mt-2">
-                    <span>{car.fuel_type}</span>
-                    <span>{car.registered}</span>
-                    <span>{car.mileage}</span>
+                    <span className="capitalize">
+                      {car?.fuel_type?.toLocaleLowerCase()}
+                    </span>
+                    <span className="capitalize">
+                      {car?.car_type?.toLocaleLowerCase()?.replace(/_/g, " ")}
+                    </span>
+                    <span>{car?.mileage}</span>
                   </div>
 
                   <p className="font-bold text-base mt-3">
-                    BDT {formatBDT(Number(car.price))}
+                    {car?.price === "Sold"
+                      ? "Sold"
+                      : Number(car?.price) === 0
+                      ? "Contact for price"
+                      : formatBDT(Number(car?.price))}
                   </p>
 
                   <div className="w-full mt-3 bg-white text-black text-center py-2 rounded-md hover:bg-gray-200 transition text-sm font-medium">
