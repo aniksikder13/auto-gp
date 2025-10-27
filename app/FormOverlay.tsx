@@ -88,7 +88,7 @@ const FormOverlay = () => {
         onClick={openPopup}
         className="w-full bg-[rgba(255,221,187,1)] text-black font-bold py-3 px-4 rounded-lg hover:bg-[rgba(139,100,61,1)] transition cursor-pointer"
       >
-        GET A QUOTE
+        Get a Quote
       </button>
 
       {/* Popup Overlay */}

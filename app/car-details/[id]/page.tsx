@@ -298,7 +298,7 @@ if (car?.slightly_negotiable?.toString().trim().toUpperCase() === "YES") {
                     }`}
                     style={{ transition: "0.5s" }}
                   >
-                    GET A CALL
+                    Call Us
                   </button>
 
                   <div
@@ -348,7 +348,7 @@ if (car?.slightly_negotiable?.toString().trim().toUpperCase() === "YES") {
                   }}
                   className="bg-amber-100 hover:bg-amber-200 w-full transition-colors duration-300 text-gray-900 font-medium py-3 px-4 rounded-lg cursor-pointer"
                 >
-                  Get Connected on Whatsapp
+                  Text Us on Whatsapp
                 </button>
                 <FormOverlay />
               </div>
@@ -633,7 +633,7 @@ if (car?.slightly_negotiable?.toString().trim().toUpperCase() === "YES") {
                       }`}
                       style={{ transition: "0.5s" }}
                     >
-                      GET A CALL
+                     Call Us
                     </button>
 
                     <div
@@ -683,7 +683,7 @@ if (car?.slightly_negotiable?.toString().trim().toUpperCase() === "YES") {
                     }}
                     className="bg-amber-100 hover:bg-amber-200 w-full transition-colors duration-300 text-gray-900 font-medium py-3 px-4 rounded-lg cursor-pointer"
                   >
-                    Get Connected on Whatsapp
+                    Text Us on WhatsApp
                   </button>
                   <FormOverlay />
                 </div>
