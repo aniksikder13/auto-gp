@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Phone } from "lucide-react";
+import { ChevronUp, Phone } from "lucide-react";
 import FormOverlay from "@/app/FormOverlay";
 import RelatedCarsCarousel from "@/app/RelatedCarsCarousel";
 
@@ -299,8 +299,15 @@ if (car?.slightly_negotiable?.toString().trim().toUpperCase() === "YES") {
                   </button>
                   {get_a_call && (
                     <div className="bg-[rgba(255,221,237,0.12)] text-white rounded-xl p-4 pb-8 w-full space-y-3">
-                      <h2 className="text-sm font-medium text-gray-300 mb-4">
+                      <h2
+                        onClick={() => {
+                          set_get_a_call(false);
+                        }}
+                        className="text-sm font-medium text-gray-300 mb-4 flex justify-between items-center cursor-pointer
+                          "
+                      >
                         Senior Sales Representative
+                        <ChevronUp className="text-gray-300 mr-2 w-5 h-5 inline-block" />
                       </h2>
 
                       {contactInfo?.map((item, index) => (
@@ -618,8 +625,15 @@ if (car?.slightly_negotiable?.toString().trim().toUpperCase() === "YES") {
                     </button>
                     {get_a_call && (
                       <div className="bg-[rgba(255,221,237,0.12)] text-white rounded-xl p-4 pb-8 w-full space-y-3">
-                        <h2 className="text-sm font-medium text-gray-300 mb-4">
+                        <h2
+                          onClick={() => {
+                            set_get_a_call(false);
+                          }}
+                          className="text-sm font-medium text-gray-300 mb-4 flex justify-between items-center cursor-pointer
+                          "
+                        >
                           Senior Sales Representative
+                          <ChevronUp className="text-gray-300 mr-2 w-5 h-5 inline-block" />
                         </h2>
 
                         {contactInfo?.map((item, index) => (
